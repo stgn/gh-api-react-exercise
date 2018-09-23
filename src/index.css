@@ -1,0 +1,24 @@
+:root {
+  --theme-dark: rgb(116, 50, 240);
+  --theme-light: rgb(242, 236, 254);
+  --pad: 3rem;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+html, body {
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  line-height: 1.5;
+}
