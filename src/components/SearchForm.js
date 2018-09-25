@@ -29,7 +29,10 @@ class SearchForm extends Component {
   render() {
     return (
       <Form onSubmit={this.handleSubmit}>
-        <SearchTextInput onChange={this.handleChange} />
+        <SearchTextInput 
+          value={this.state.value} 
+          onChange={this.handleChange}
+        />
         <Button>Search</Button>
       </Form>
     );

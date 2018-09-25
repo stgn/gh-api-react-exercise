@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { TextInput } from './ui.js';
 
-const Settings = observer(class Settings extends Component {
+const SettingsView = observer(class SettingsView extends Component {
   handleChangeToken = e => {
     this.props.settings.apiToken = e.target.value;
   }
@@ -23,4 +23,4 @@ const Settings = observer(class Settings extends Component {
   }
 });
 
-export default Settings;
+export default SettingsView;

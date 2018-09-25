@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { autorun } from 'mobx';
+import { observable, autorun } from 'mobx';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
@@ -29,12 +29,14 @@ const settings = loadAndPersist('settings', SettingsModel);
 const favorites = loadAndPersist('favorites', FavoritesModel);
 const search = new SearchModel();
 
+const store = observable({
+  settings,
+  favorites,
+  search
+});
+
 render(
-  <App 
-    settings={settings} 
-    favorites={favorites} 
-    search={search}
-  />, 
+  <App store={store} />, 
   document.getElementById('root')
 );
 

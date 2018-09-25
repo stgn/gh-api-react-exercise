@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { HashRouter as Router, Route, Link } from 'react-router-dom';
-import { observer, Observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import styled from 'styled-components';
 
-import { LinkButton } from './ui.js';
-import Repos from './Repos.js';
-import SearchForm from './SearchForm.js';
-import Settings from './Settings.js';
+import FavoritesView from './FavoritesView.js';
+import SearchView from './SearchView.js';
+import SettingsView from './SettingsView.js';
 
 const Header = styled.div`
   background: var(--theme-dark);
@@ -57,47 +56,8 @@ const Navbar = styled.ul`
   }
 `;
 
-const Warning = styled.div`
-  color: #f66;
-  border: 1px solid #f66;
-  border-radius: 0.25rem;
-  background: #fee;
-  padding: 1rem;
-  margin-bottom: 1rem;
-`;
-
-const App = observer(class App extends Component {
-  doSearch = query => {
-    const { apiToken } = this.props.settings;
-    this.props.search.fetchResults(apiToken, query);
-  }
-
-  isRepoFavorited = id => {
-    const { favorites } = this.props.favorites;
-    return favorites.some(repo => repo.id === id);
-  }
-
-  renderSearchResultsAction = repo => {
-    if (this.isRepoFavorited(repo.id))
-      return null;
-
-    return (
-      <LinkButton onClick={() => this.props.favorites.add(repo)}>
-        Add
-      </LinkButton>
-    );
-  }
-
-  renderFavoritesAction = repo => {
-    return (
-      <LinkButton onClick={() => this.props.favorites.remove(repo.id)}>
-        Remove
-      </LinkButton>
-    );
-  }
-
-  render() {
-    const { favorites, search, settings } = this.props;
+const App = observer(({ store }) => {
+    const { favorites, settings } = store;
 
     return (
       <Router>
@@ -106,39 +66,24 @@ const App = observer(class App extends Component {
             <h1>My GitHub Favorites</h1>
           </Header>
           <Navbar>
-            <li>
-              <Link to="/">Search</Link>
-            </li>
-            <li>
-              <Link to="/settings">Settings</Link>
-            </li>
+            <li><Link to="/">Search</Link></li>
+            <li><Link to="/settings">Settings</Link></li>
           </Navbar>
           <GridContainer>
             <Column>
               <Route exact path="/" render={() => 
-                <Observer>
-                  {() => <div>
-                    {settings.apiToken === '' && 
-                      <Warning>Please provide a GitHub personal access token in the settings.</Warning>}
-                    <SearchForm onSubmit={this.doSearch} onChange={search.clearResults} />
-                    <Repos repos={search.results}>
-                      {this.renderSearchResultsAction}
-                    </Repos>
-                  </div>}
-                </Observer>
-              }/>
-              <Route path="/settings" render={() => <Settings settings={settings} />} />
+                <SearchView app={store} />} />
+              <Route path="/settings" render={() => 
+                <SettingsView settings={settings} />} />
             </Column>
             <Column bgColor="var(--theme-light)">
-              <Repos repos={favorites.favorites}>
-                {this.renderFavoritesAction}
-              </Repos>
+              <FavoritesView favorites={favorites} />
             </Column>
           </GridContainer>
         </FlexContainer>
       </Router>
     );
   }
-});
+);
 
 export default App;
